@@ -6,7 +6,9 @@ Package.describe({
 
 Package.onUse(function (api) {
   api.use([
-    'http', 'mongo', 'underscore'
+    'http@1.1.0',
+    'mongo@1.1.0',
+    'underscore@1.0.3'
   ], 'server');
 
   api.addFiles([
