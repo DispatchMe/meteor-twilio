@@ -39,7 +39,7 @@ Twilio.prototype.sendSMS = function (options, callback) {
     body: String
   });
 
-  return Meteor.wrapAsync(self.client.sendSMS).call(self.client, options, callback);
+  return Meteor.wrapAsync(self.client.sendMessage).call(self.client, options, callback);
 };
 
 /*
@@ -63,7 +63,7 @@ Twilio.prototype.sendMMS = function (options, callback) {
     mediaUrl: Match.Optional(String)
   });
 
-  return Meteor.wrapAsync(self.client.sendMMS).call(self.client, options, callback);
+  return Meteor.wrapAsync(self.client.messages.post).call(self.client, options, callback);
 };
 
 /*
