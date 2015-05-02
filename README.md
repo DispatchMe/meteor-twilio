@@ -1,7 +1,7 @@
 meteor twilio
 ==============
 
-A meteor package for using Twilio's APIs.
+A Meteor package for sending SMS/MMS and making calls with Twilio APIs.
 
 ##Usage
 `meteor add dispatch:twilio`
