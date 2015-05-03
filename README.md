@@ -47,6 +47,6 @@ client.makeCall({ to: '+18646978257' });
 client.lookup('+18646978257');
 
 // Get information about the number asynchronously
-client.lookupAsync('+18646978257', function (error, info) {});
+client.lookup('+18646978257', function (error, info) {});
 
 ```
