@@ -2,7 +2,7 @@ var twilio = Npm.require('twilio');
 
 var lookups = new Mongo.Collection('twilio.lookups');
 
-Twilio = function(options) {
+Twilio = function (options) {
   var self = this;
 
   options = _.extend({
@@ -31,12 +31,15 @@ Twilio = function(options) {
 Twilio.prototype.sendSMS = function (options, callback) {
   var self = this;
 
-  options = _.extend({ from: self.from }, options);
+  options = _.extend({
+    from: self.from
+  }, options);
 
   check(options, {
     to: String,
     from: String,
-    body: String
+    body: String,
+    statusCallback: Match.Optional(String)
   });
 
   return Meteor.wrapAsync(self.client.sendMessage).call(self.client, options, callback);
@@ -49,18 +52,22 @@ Twilio.prototype.sendSMS = function (options, callback) {
  * {String} options.body
  * {String} options.mediaUrl
  * {String} [options.from] Specify a different number to send the sms from.
+ * {String} [options.statusCallback] Specify a callback URL for Twilio to hit for status updates
  * @param {Function} [callback]
  */
 Twilio.prototype.sendMMS = function (options, callback) {
   var self = this;
 
-  options = _.extend({ from: self.from }, options);
+  options = _.extend({
+    from: self.from
+  }, options);
 
   check(options, {
     to: String,
     from: String,
     body: String,
-    mediaUrl: Match.Optional(String)
+    mediaUrl: Match.Optional(String),
+    statusCallback: Match.Optional(String)
   });
 
   return Meteor.wrapAsync(self.client.messages.post).call(self.client, options, callback);
@@ -71,16 +78,20 @@ Twilio.prototype.sendMMS = function (options, callback) {
  * @param options
  * {String} options.to
  * {String} [options.from] Specify a different number to call from.
+ * {String} [options.statusCallback] Specify a callback URL for Twilio to hit for status updates
  * @param {Function} [callback]
  */
 Twilio.prototype.makeCall = function (options, callback) {
   var self = this;
 
-  options = _.extend({ from: self.from }, options);
+  options = _.extend({
+    from: self.from
+  }, options);
 
   check(options, {
     to: String,
-    from: String
+    from: String,
+    statusCallback: Match.Optional(String)
   });
 
   return Meteor.wrapAsync(self.client.makeCall).call(self.client, options, callback);
@@ -92,6 +103,7 @@ Twilio.prototype.makeCall = function (options, callback) {
  * @param options
  * {String} [options.Type] Get more information about the number. Ex. Type: 'carrier'
  * {String} [options.country_code]
+ * {String} [options.statusCallback] Specify a callback URL for Twilio to hit for status updates
  * @param {Function} [callback]
  */
 Twilio.prototype.lookupAsync = function (phoneNumber, options, callback) {
@@ -104,10 +116,12 @@ Twilio.prototype.lookupAsync = function (phoneNumber, options, callback) {
     options = {};
   }
 
-  var info = lookups.findOne({ phoneNumber: phoneNumber });
+  var info = lookups.findOne({
+    phoneNumber: phoneNumber
+  });
 
   if (info) {
-    callback(null, info)
+    callback(null, info);
   } else {
 
     HTTP.get('https://lookups.twilio.com/v1/PhoneNumbers/' + phoneNumber, {
