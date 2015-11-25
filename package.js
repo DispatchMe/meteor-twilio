@@ -1,6 +1,6 @@
 Package.describe({
   name: 'dispatch:twilio',
-  version: '1.1.0',
+  version: '1.2.0',
   summary: 'Twilio api support for meteor.',
   git: 'https://github.com/DispatchMe/meteor-twilio.git',
   documentation: 'README.md'
