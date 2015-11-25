@@ -10,13 +10,19 @@ Twilio = function (options) {
   }, options);
 
   check(options, {
-    from: String,
+    from: Match.Optional(String),
+    messagingServiceSid: Match.Optional(String),
     sid: String,
     token: String
   });
 
+  if (!options.from && !options.messagingServiceSid) {
+    throw new Error('You must provide either a "from" number or a "messagingServiceSid"!');
+  }
+
   self.client = new twilio(options.sid, options.token);
   self.from = options.from;
+  self.messagingServiceSid = options.messagingServiceSid;
   self.auth = options.sid + ':' + options.token;
 };
 
@@ -31,13 +37,20 @@ Twilio = function (options) {
 Twilio.prototype.sendSMS = function (options, callback) {
   var self = this;
 
-  options = _.extend({
-    from: self.from
-  }, options);
+  if (self.from) {
+    options = _.extend({
+      from: self.from
+    }, options);
+  } else {
+    options = _.extend({
+      messagingServiceSid: self.messagingServiceSid
+    }, options);
+  }
 
   check(options, {
     to: String,
-    from: String,
+    from: Match.Optional(String),
+    messagingServiceSid: Match.Optional(String),
     body: String,
     statusCallback: Match.Optional(String)
   });
